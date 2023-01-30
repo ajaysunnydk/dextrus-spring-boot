@@ -1,6 +1,7 @@
 package com.dextrus.demo.service;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -74,56 +75,61 @@ public class ConnectionService {
 		return viewsAndTables;
 	}
 
-//	public List<TableDescription> getTableDescription(ConnectionProperties properties, String catalog, String schema,
-//			String table) {
-//		List<TableDescription> tableDescList = new ArrayList<>();
-//		try {
-//			Connection connection = CC.getConnection(properties);
-//			PreparedStatement statement = connection.prepareStatement("use " + catalog + "; " + CC.DESCRIPTION_QUERY);
-//			table = schema + "." + table;
-//			statement.setString(1, table);
-//			ResultSet resultSet = statement.executeQuery();
-//			while (resultSet.next()) {
-//				TableDescription td = new TableDescription();
-//				td.setColumnName(resultSet.getString("COLUMN_NAME"));
-//				td.setDataType(resultSet.getString("DATA_TYPE"));
-//				td.setPrecision(resultSet.getInt("PRECISION"));
-//				td.setMaxlength(resultSet.getInt("MAX_LENGTH"));
-//				td.setIsNullable(resultSet.getInt("IS_NULLABLE"));
-//				td.setPrimaryKey(resultSet.getInt("PRIMARY_KEY"));
-//				tableDescList.add(td);
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return tableDescList;
-//	}
-	
-	public List<TableDescription> getTableDescription(ConnectionProperties properties, String catalog, String schema,String table){
-		List<TableDescription> descList = new ArrayList<>();
+	public List<TableDescription> getTableDescription(ConnectionProperties properties, String catalog, String schema,
+			String table) {
+		List<TableDescription> tableDescList = new ArrayList<>();
 		try {
 			Connection connection = CC.getConnection(properties);
-			PreparedStatement stmt = connection.prepareStatement("USE "+catalog+"; "+"SELECT * FROM "+schema+"."+table);
-			ResultSet rs = stmt.executeQuery();
-			ResultSetMetaData meta  =rs.getMetaData();
-			int columnCount = meta.getColumnCount();
-			for(int i=1;i<=columnCount;i++) {
+			PreparedStatement statement = connection.prepareStatement("use " + catalog + "; " + CC.DESCRIPTION_QUERY);
+			table = schema + "." + table;
+			statement.setString(1, table);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
 				TableDescription td = new TableDescription();
-				td.setColumnName(meta.getColumnName(i));
-				td.setDataType(meta.getColumnTypeName(i));
-				td.setIsNullable(meta.isNullable(i));
-//				meta.pri
-//				td.setPrimaryKey(meta.pr);
-//				td.setMaxlength(null);
-				td.setPrecision(meta.getPrecision(i));
-				descList.add(td);
+				td.setColumnName(resultSet.getString("COLUMN_NAME"));
+				td.setDataType(resultSet.getString("DATA_TYPE"));
+				td.setPrecision(resultSet.getInt("PRECISION"));
+				td.setMaxlength(resultSet.getInt("MAX_LENGTH"));
+				td.setIsNullable(resultSet.getInt("IS_NULLABLE"));
+				td.setPrimaryKey(resultSet.getInt("PRIMARY_KEY"));
+				tableDescList.add(td);
 			}
-			return descList;
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			return descList;
 		}
+		return tableDescList;
 	}
+	
+//	public List<TableDescription> getTableDescription(ConnectionProperties properties, String catalog, String schema,String table){
+//		List<TableDescription> descList = new ArrayList<>();
+//		try {
+//			Connection connection = CC.getConnection(properties);
+//			PreparedStatement stmt = connection.prepareStatement("USE "+catalog+"; "+"SELECT * FROM "+schema+"."+table);
+//			ResultSet rs = stmt.executeQuery();
+//			ResultSetMetaData meta  =rs.getMetaData();
+//			DatabaseMetaData meta1 = connection.getMetaData();
+//			int columnCount = meta.getColumnCount();
+//			ResultSet primaryKey = meta1.getPrimaryKeys(catalog, schema, table);
+//			primaryKey.next();
+//			String primaryColumn = " "; 
+//			primaryColumn = primaryKey.getString("COLUMN_NAME");
+//			for(int i=1;i<=columnCount;i++) {
+//				TableDescription td = new TableDescription();
+//				td.setColumnName(meta.getColumnName(i));
+//				td.setDataType(meta.getColumnTypeName(i));
+//				td.setIsNullable(meta.isNullable(i));
+//				if(primaryColumn.equalsIgnoreCase(meta.getColumnName(i)));
+//					td.setPrimaryKey(1);				
+//				td.setMaxlength(meta.getColumnDisplaySize(i));
+//				td.setPrecision(meta.getPrecision(i));
+//				descList.add(td);
+//			}
+//			return descList;
+//		}catch(Exception e) {
+//			e.printStackTrace();
+//			return descList;
+//		}
+//	}
 	
 
 	public List<List<Object>> getTableData(ConnectionProperties properties, String query) {
