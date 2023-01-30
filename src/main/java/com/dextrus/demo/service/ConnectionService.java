@@ -99,38 +99,35 @@ public class ConnectionService {
 		}
 		return tableDescList;
 	}
-	
-//	public List<TableDescription> getTableDescription(ConnectionProperties properties, String catalog, String schema,String table){
+
+//	public List<TableDescription> getTableDescription(ConnectionProperties properties, String catalog, String schema,
+//			String table) {
 //		List<TableDescription> descList = new ArrayList<>();
 //		try {
 //			Connection connection = CC.getConnection(properties);
-//			PreparedStatement stmt = connection.prepareStatement("USE "+catalog+"; "+"SELECT * FROM "+schema+"."+table);
+//			PreparedStatement stmt = connection
+//					.prepareStatement("USE " + catalog + "; " + "SELECT * FROM " + schema + "." + table);
 //			ResultSet rs = stmt.executeQuery();
-//			ResultSetMetaData meta  =rs.getMetaData();
+//			ResultSetMetaData meta = rs.getMetaData();
 //			DatabaseMetaData meta1 = connection.getMetaData();
 //			int columnCount = meta.getColumnCount();
-//			ResultSet primaryKey = meta1.getPrimaryKeys(catalog, schema, table);
-//			primaryKey.next();
-//			String primaryColumn = " "; 
-//			primaryColumn = primaryKey.getString("COLUMN_NAME");
-//			for(int i=1;i<=columnCount;i++) {
+//
+//			for (int i = 1; i <= columnCount; i++) {
 //				TableDescription td = new TableDescription();
 //				td.setColumnName(meta.getColumnName(i));
 //				td.setDataType(meta.getColumnTypeName(i));
 //				td.setIsNullable(meta.isNullable(i));
-//				if(primaryColumn.equalsIgnoreCase(meta.getColumnName(i)));
-//					td.setPrimaryKey(1);				
+//				td.setPrimaryKey(0);
 //				td.setMaxlength(meta.getColumnDisplaySize(i));
 //				td.setPrecision(meta.getPrecision(i));
 //				descList.add(td);
 //			}
 //			return descList;
-//		}catch(Exception e) {
+//		} catch (Exception e) {
 //			e.printStackTrace();
 //			return descList;
 //		}
 //	}
-	
 
 	public List<List<Object>> getTableData(ConnectionProperties properties, String query) {
 		List<List<Object>> rows = new ArrayList<>();
@@ -189,7 +186,7 @@ public class ConnectionService {
 		return rows;
 	}
 
-	public List<TableType> getTablesAndViewsByPattern(ConnectionProperties properties, String catalog,String pattern) {
+	public List<TableType> getTablesAndViewsByPattern(ConnectionProperties properties, String catalog, String pattern) {
 		List<TableType> viewsAndTables = new ArrayList<>();
 		try {
 			Connection connection = CC.getConnection(properties);
