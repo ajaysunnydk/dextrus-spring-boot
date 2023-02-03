@@ -30,7 +30,7 @@ public class ConnectionController {
 	public ResponseEntity<String> connectToSqlServer(@RequestBody ConnectionProperties properties) {
 		Connection connection = service.getSQLServerConnection(properties);
 		if(connection==null)
-			return new ResponseEntity<String>("Not Connected--------------", HttpStatus.SERVICE_UNAVAILABLE);
+			return new ResponseEntity<String>("Connection Failed", HttpStatus.SERVICE_UNAVAILABLE);
 		else
 			return new ResponseEntity<String>("Connected to SQL Server", HttpStatus.OK);
 	}
