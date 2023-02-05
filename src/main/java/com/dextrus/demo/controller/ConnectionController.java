@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +27,11 @@ public class ConnectionController {
 	@Autowired
 	private ConnectionService service;
 
+	@GetMapping("/test")
+	public ResponseEntity<String> test(){
+		return new ResponseEntity<String>("API Tiggered",HttpStatus.OK);
+	}
+	
 	@PostMapping("/connect")
 	public ResponseEntity<String> connectToSqlServer(@RequestBody ConnectionProperties properties) {
 		Connection connection = service.getSQLServerConnection(properties);
