@@ -54,7 +54,6 @@ public class ConnectionController {
 		String catalogName = null;
 	    try {
 	    	catalogName = URLDecoder.decode(catalog, "UTF-8");
-	    	System.out.println("--------------"+catalogName+"-----------------");
 	    } catch (UnsupportedEncodingException e) {
 	        e.printStackTrace();
 	    }
