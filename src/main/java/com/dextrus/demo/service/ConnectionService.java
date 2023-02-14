@@ -44,7 +44,7 @@ public class ConnectionService {
 		List<String> schemas = null;
 		try {
 			Connection connection = CC.getConnection(properties);
-			String query = "SELECT name FROM " + catalog + ".sys.schemas";
+			String query = "SELECT name FROM \"" + catalog + "\".sys.schemas";
 			ResultSet rs = connection.createStatement().executeQuery(query);
 			schemas = new ArrayList<>();
 			while (rs.next())

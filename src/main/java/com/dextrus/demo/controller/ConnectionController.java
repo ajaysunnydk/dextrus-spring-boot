@@ -1,5 +1,7 @@
 package com.dextrus.demo.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.sql.Connection;
 import java.util.List;
 
@@ -47,9 +49,16 @@ public class ConnectionController {
 		return new ResponseEntity<List<String>>(catalogs, HttpStatus.OK);
 	}
 
-	@PostMapping("/{catalog}")
-	public ResponseEntity<List<String>> getSchemas(@PathVariable String catalog, @RequestBody ConnectionProperties properties){
-		List<String> schemas = service.getSchemasList(properties,catalog);
+	@PostMapping("/{catalog:.+}")
+	public ResponseEntity<List<String>> getSchemas(@PathVariable("catalog") String catalog, @RequestBody ConnectionProperties properties){
+		String catalogName = null;
+	    try {
+	    	catalogName = URLDecoder.decode(catalog, "UTF-8");
+	    	System.out.println("--------------"+catalogName+"-----------------");
+	    } catch (UnsupportedEncodingException e) {
+	        e.printStackTrace();
+	    }
+		List<String> schemas = service.getSchemasList(properties,catalogName);
 		return new ResponseEntity<List<String>>(schemas, HttpStatus.OK);
 	}
 	
