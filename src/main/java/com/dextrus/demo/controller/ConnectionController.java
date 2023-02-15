@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -87,5 +88,10 @@ public class ConnectionController {
 		return new ResponseEntity<List<TableType>>(viewsAndTables, HttpStatus.OK);
 	}
 	
+	@PostMapping("/{catalog}/{schema}/{table}/{count}")
+	public ResponseEntity<List<Map<String, Object>>> getCountRowsFromTable(@RequestBody ConnectionProperties properties,@PathVariable String catalog, @PathVariable String schema, @PathVariable String table,@PathVariable int count){
+		List<Map<String, Object>> tableData = service.getCountRowsFromTable(properties,catalog,schema,table,count, null);
+		return new ResponseEntity<List<Map<String,Object>>>(tableData,HttpStatus.OK);
+	}
 
 }

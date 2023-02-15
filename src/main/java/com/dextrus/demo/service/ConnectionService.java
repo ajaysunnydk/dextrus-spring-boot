@@ -1,14 +1,15 @@
 package com.dextrus.demo.service;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -205,4 +206,46 @@ public class ConnectionService {
 		}
 		return viewsAndTables;
 	}
+
+	public List<Map<String, Object>> getCountRowsFromTable(ConnectionProperties properties, String catalog,
+			String schema, String table, int count, Class<?> pojoClass) {
+		List<Map<String, Object>> rows = new ArrayList<>();
+		try {
+			Connection con = CC.getConnection(properties);
+			Statement statement = con.createStatement();
+			String query = "use " + catalog + "; SELECT TOP " + count + " * FROM " + schema + "." + table;
+			ResultSet rs = statement.executeQuery(query);
+			ResultSetMetaData meta = rs.getMetaData();
+			int columnCount = meta.getColumnCount();
+			while (rs.next()) {
+				Map<String, Object> row = new HashMap<>();
+				for (int i = 1; i <= columnCount; i++) {
+					String columnName = meta.getColumnName(i);
+					String propertyName = columnNameToPropertyName(columnName);
+					Object value = rs.getObject(i);
+					row.put(propertyName, value);
+				}
+				rows.add(row);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rows;
+	}
+
+//Helper method to convert column names to property names
+	private static String columnNameToPropertyName(String columnName) {
+		String[] parts = columnName.split("_");
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < parts.length; i++) {
+			sb.append(capitalize(parts[i]));
+		}
+		return sb.toString();
+	}
+
+//Helper method to capitalize the first letter of a string
+	private static String capitalize(String s) {
+		return s.substring(0, 1).toUpperCase() + s.substring(1);
+	}
+
 }
